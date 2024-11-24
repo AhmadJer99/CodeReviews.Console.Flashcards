@@ -65,7 +65,7 @@ public class ViewPreviousSessionsData
 
     internal static void ViewAllData()
     {
-        StudyDBController studyDBController = new();
+        StudyDbController studyDBController = new();
         var studySessions = studyDBController.ReadAllRows();
         var studySessionsDtos = studySessions.Select(
             s => s.ToStudySessionDto())
@@ -82,7 +82,7 @@ public class ViewPreviousSessionsData
         if (stackId == -1)
             return;
 
-        StudyDBController studyDBController = new();
+        StudyDbController studyDBController = new();
         var yearlyReports = studyDBController.ReadYearlyStackData(stackId, year);
 
         Console.Clear();

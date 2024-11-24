@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace FlashCards.Data;
 
-internal abstract class DataBaseController<T>
+internal abstract class DatabaseController<T>
 {
     protected void InitDataBase()
     {

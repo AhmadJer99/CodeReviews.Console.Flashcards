@@ -24,11 +24,11 @@ internal class StacksManager : ModelManager<Stack>
 
     private List<StackDto>? _stacksDtos;
     private List<Stack>? _stacks;
-    private readonly StacksDBController _stacksDBController;
+    private readonly StacksDbController _stacksDBController;
 
     public StacksManager()
     {
-        _stacksDBController = new StacksDBController();
+        _stacksDBController = new StacksDbController();
         LoadStacks();
     }
 

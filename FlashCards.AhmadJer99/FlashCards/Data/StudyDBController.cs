@@ -3,9 +3,9 @@ using FlashCards.Models;
 
 namespace FlashCards.Data;
 
-internal class StudyDBController : DataBaseController<StudySession>
+internal class StudyDbController : DatabaseController<StudySession>
 {
-    public StudyDBController()
+    public StudyDbController()
     {
         InitDataBase();
     }

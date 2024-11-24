@@ -20,7 +20,7 @@ internal class CardsManager : ModelManager<Card>
 
     private List<CardDto>? _cardsDtos;
     private List<Card>? _cards;
-    private readonly CardsDBController _cardsDBController = new();
+    private readonly CardsDbController  _cardsDBController = new();
 
     public CardsManager()
     {
@@ -32,7 +32,7 @@ internal class CardsManager : ModelManager<Card>
     {
         List<StackDto> stacksDtos;
         List<Stack> stacks;
-        StacksDBController stacksDBController = new();
+        StacksDbController stacksDBController = new();
 
         StacksManager stacksManager = new StacksManager();
         stacks = stacksDBController.ReadAllRows();

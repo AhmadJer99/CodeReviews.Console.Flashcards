@@ -3,9 +3,9 @@ using FlashCards.Models;
 
 namespace FlashCards.Data;
 
-internal class CardsDBController : DataBaseController<Card>
+internal class CardsDbController : DatabaseController<Card>
 {
-    public CardsDBController()
+    public CardsDbController()
     {
         InitDataBase();
     }

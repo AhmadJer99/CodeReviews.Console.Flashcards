@@ -23,7 +23,7 @@ internal class StudySessionArea
 
     private void LoadCards()
     {
-        CardsDBController cardsDBController = new();
+        CardsDbController cardsDBController = new();
         _cards = cardsDBController.ReadAllRows(_currentStudyStackId, true);
     }
 
@@ -96,7 +96,7 @@ internal class StudySessionArea
 
     private Card GetRandomCard()
     {
-        CardsDBController cardsDBController = new();
+        CardsDbController cardsDBController = new();
         int cardsNumberInStack = cardsDBController.RowsCount(_currentStudyStackId);
 
         Random random = new();
@@ -136,7 +136,7 @@ internal class StudySessionArea
 
     private void StoreSession()
     {
-        StudyDBController studyDBController = new();
+        StudyDbController studyDBController = new();
         var studySession = new StudySession() 
         {
             session_date = SessionDateTime,

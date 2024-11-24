@@ -3,9 +3,9 @@ using Dapper;
 
 namespace FlashCards.Data;
 
-internal class StacksDBController : DataBaseController<Stack>
+internal class StacksDbController : DatabaseController<Stack>
 {
-    public StacksDBController()
+    public StacksDbController()
     {
         InitDataBase();
     }
