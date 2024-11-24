@@ -2,6 +2,6 @@
 
 internal class StudySessionDto
 {
-    public string FormattedSessionDate { get; set; }
-    public int score { get; set; }
+    public string? FormattedSessionDate { get; set; }
+    public int SessionScore { get; set; }
 }

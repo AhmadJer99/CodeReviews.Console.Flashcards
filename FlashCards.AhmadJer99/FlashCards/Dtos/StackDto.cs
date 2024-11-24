@@ -2,5 +2,5 @@
 
 public class StackDto
 {
-    public string name { get; set; }
+    public string? StackName { get; set; }
 }

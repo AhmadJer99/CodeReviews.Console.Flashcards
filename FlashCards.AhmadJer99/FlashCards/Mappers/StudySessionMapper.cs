@@ -10,7 +10,7 @@ internal static class StudySessionMapper
         return new StudySessionDto()
         {
             FormattedSessionDate = studySession.session_date.ToString("yyyy/MM/dd"),
-            score = studySession.score,
+            SessionScore = studySession.score,
         };
     }
 }

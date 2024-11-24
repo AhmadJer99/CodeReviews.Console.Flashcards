@@ -2,7 +2,7 @@
 
 internal class CardDto
 {
-    public int cardnumber { get; set; }
-    public string front { get; set; }
-    public string back { get; set; }
+    public int CardNumber { get; set; }
+    public string? CardFront { get; set; }
+    public string? CardBack { get; set; }
 }

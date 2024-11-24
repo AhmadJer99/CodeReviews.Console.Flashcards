@@ -126,7 +126,7 @@ internal class StacksManager : ModelManager<Stack>
     {
         foreach (StackDto stackDto in _stacksDtos)
         {
-            if (userEntry == stackDto.name)
+            if (userEntry == stackDto.StackName)
                 return true;
         }
         return false;

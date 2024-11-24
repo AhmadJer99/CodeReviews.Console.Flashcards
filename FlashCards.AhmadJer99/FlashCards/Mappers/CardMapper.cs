@@ -9,9 +9,9 @@ internal static class CardMapper
     {
        return new CardDto()
         {
-           cardnumber = card.cardnumber,
-           front = card.front,
-           back = card.back
+           CardNumber = card.cardnumber,
+           CardFront = card.front,
+           CardBack = card.back
         };
     }
 }

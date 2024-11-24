@@ -9,7 +9,7 @@ internal static class StackMapper
     {
         return new  StackDto
         {
-            name = stack.name
+            StackName = stack.name
         };
     }
 }
