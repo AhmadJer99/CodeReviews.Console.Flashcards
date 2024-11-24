@@ -1,11 +1,11 @@
 ﻿using ConsoleTableExt;
 
 namespace FlashCards.Managers;
+
 public class TableVisualisationEngine<T> where T : class //  enforces that T must be a reference type
 {
     public static void ViewAsTable(List<T> listOfClassObjects, TableAligntment tableAligntment, List<string> columnNames,string tableTitle = "")
     {
-
         ConsoleTableBuilder.From(listOfClassObjects)
             .WithColumn(columnNames)
             .WithTitle(tableTitle)

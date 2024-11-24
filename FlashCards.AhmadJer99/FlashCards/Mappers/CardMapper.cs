@@ -1,5 +1,6 @@
 ﻿using FlashCards.Models;
 using FlashCards.Dtos;
+
 namespace FlashCards.Mappers;
 
 internal static class CardMapper

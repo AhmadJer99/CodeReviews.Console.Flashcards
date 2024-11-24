@@ -6,28 +6,26 @@ namespace FlashCards.Managers;
 
 internal class StudySessionArea
 {
-
-    private List<Card> _cards;
-    private int currentStudyStackId;
-    private int score;
+    private List<Card>? _cards;
+    private int _currentStudyStackId;
+    private int _score;
     // the score is  out of 10.
     // each correct answer grants 2 points
     // a wrong answer will deduct 1 point away.
     public DateTime SessionDateTime { get; set; }
     public int Score
     {
-        get => score;
-        set => score = value >= 0 && value < 11
+        get => _score;
+        set => _score = value >= 0 && value < 11
            ? value
-           : throw new ArgumentOutOfRangeException("Error: error ocurred during setting the value of score, value is invalid.");
+           : throw new ArgumentOutOfRangeException("Error: error ocurred during setting the value of _score, value is invalid.");
     }
 
     private void LoadCards()
     {
         CardsDBController cardsDBController = new();
-        _cards = cardsDBController.ReadAllRows(currentStudyStackId, true);
+        _cards = cardsDBController.ReadAllRows(_currentStudyStackId, true);
     }
-
 
     public void ShowMenu()
     {
@@ -35,6 +33,7 @@ internal class StudySessionArea
         SessionDateTime = DateTime.Now;
         AnsiConsole.MarkupLine("[yellow]Choose a stack to study: [/]");
         SelectStack();
+
         do
         {
             Console.Clear();
@@ -54,7 +53,7 @@ internal class StudySessionArea
 
             if (Score == 10)
             {
-                Console.WriteLine("Well Done you got a full score!");
+                Console.WriteLine("Well Done you got a full _score!");
                 StoreSession();
                 break;
             }
@@ -66,12 +65,12 @@ internal class StudySessionArea
             }
         }
         while (!exitMenu);
-        
     }
+
     public void SelectStack()
     {
         StacksManager stacksManager = new();
-        currentStudyStackId = stacksManager.ChooseStackMenu();
+        _currentStudyStackId = stacksManager.ChooseStackMenu();
     }
 
     private void ShowCard()
@@ -87,7 +86,7 @@ internal class StudySessionArea
             TableVisualisationEngine<string>.ViewSingleColumn(cardFront, "Front", tableAlignment); // show the question in a pleasent table view to represent a card view
 
             string userEntry = GetUserAnswer();
-            ProcessEntry(userEntry, cardBack); // compares the strings and calculates the score, shows the correct answer if wrong.
+            ProcessEntry(userEntry, cardBack); // compares the strings and calculates the _score, shows the correct answer if wrong.
         }
         catch (ArgumentOutOfRangeException)
         {
@@ -98,7 +97,7 @@ internal class StudySessionArea
     private Card GetRandomCard()
     {
         CardsDBController cardsDBController = new();
-        int cardsNumberInStack = cardsDBController.RowsCount(currentStudyStackId);
+        int cardsNumberInStack = cardsDBController.RowsCount(_currentStudyStackId);
 
         Random random = new();
 
@@ -106,10 +105,12 @@ internal class StudySessionArea
 
         return _cards[randomCardNumber];
     }
+
     private static string GetUserAnswer()
     {
         return AnsiConsole.Ask<string>("[yellow]Enter the correct answer for this card:\n[/]");
     }
+
     private void ProcessEntry(string userEntry, string cardBack)
     {
         try
@@ -126,12 +127,13 @@ internal class StudySessionArea
         catch (ArgumentOutOfRangeException)
         {
             // only two possible values could throw an error if the value drops below zero and  goes above 10
-            if (score < 0)
-                score = 0;
-            else if (score > 10)
-                score = 10;
+            if (_score < 0)
+                _score = 0;
+            else if (_score > 10)
+                _score = 10;
         }
     }
+
     private void StoreSession()
     {
         StudyDBController studyDBController = new();
@@ -139,13 +141,11 @@ internal class StudySessionArea
         {
             session_date = SessionDateTime,
             score = Score,
-            FK_stack_id = currentStudyStackId
+            FK_stack_id = _currentStudyStackId
         };
-
         studyDBController.InsertRow(studySession);
+
         AnsiConsole.MarkupLine("[green]Session Stored Successfully![/]\n(Press Any Key To Continue)");
         Console.ReadKey();
     }
-
-
 }

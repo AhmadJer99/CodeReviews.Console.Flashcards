@@ -9,6 +9,7 @@ internal class StudyDBController : DataBaseController<StudySession>
     {
         InitDataBase();
     }
+
     public override void DeleteRow(int _id) // Not needed
     {
         throw new NotImplementedException();
@@ -31,7 +32,9 @@ internal class StudyDBController : DataBaseController<StudySession>
             List<StudySession> studySessions = connection.Query<StudySession>(readQuery).ToList();
             return studySessions;
         }
-    }public  List<StudySession> ReadAllRows(int stackId)
+    }
+
+    public  List<StudySession> ReadAllRows(int stackId)
     {
         using (var connection = CreateConnection())
         {
@@ -40,7 +43,6 @@ internal class StudyDBController : DataBaseController<StudySession>
             return studySessions;
         }
     }
-
 
     public override void UpdateRow(StudySession classObject) // Not needed
     {
@@ -87,4 +89,3 @@ internal class StudyDBController : DataBaseController<StudySession>
         }
     }
 }
-

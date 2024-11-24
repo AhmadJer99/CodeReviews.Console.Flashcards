@@ -13,12 +13,10 @@ internal class UserInterface
         do
         {
             Console.Clear();
-
             var mainMenuUserChoice = AnsiConsole.Prompt(
                         new SelectionPrompt<MainMenuAction>()
                         .Title("[yellow]Choose an operation from the following list:[/]")
                         .AddChoices(Enum.GetValues<MainMenuAction>()));
-
 
             switch (mainMenuUserChoice)
             {

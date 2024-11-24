@@ -12,28 +12,31 @@ internal class StacksManager : ModelManager<Stack>
     public enum StackManagementOptions
     {
         AddNewStack,
-        ManageCurrentStacks
+        ManageCurrentStacks,
+        BackToMenu
     }
+
     public enum StackOperations
     {
         DeleteSelectedStack,
         UpdateSelectedStack
     }
 
-    private List<StackDto> stacksDtos;
-    private List<Stack> stacks;
-    readonly StacksDBController stacksDBController;
+    private List<StackDto>? _stacksDtos;
+    private List<Stack>? _stacks;
+    private readonly StacksDBController _stacksDBController;
+
     public StacksManager()
     {
-        stacksDBController = new StacksDBController();
+        _stacksDBController = new StacksDBController();
         LoadStacks();
     }
 
     private void LoadStacks()
     {
-        stacks = stacksDBController.ReadAllRows();
+        _stacks = _stacksDBController.ReadAllRows();
 
-        stacksDtos = stacks.Select(
+        _stacksDtos = _stacks.Select(
                 s => s.ToStackDto())
                 .ToList();
     }
@@ -55,6 +58,8 @@ internal class StacksManager : ModelManager<Stack>
                     break;
                 ChooseOperationMenu(stackId);
                 break;
+            case StackManagementOptions.BackToMenu:
+                return;
         }
     }
 
@@ -76,13 +81,12 @@ internal class StacksManager : ModelManager<Stack>
                 Console.ReadKey();
                 break;
         }
-
     }
 
     private void ShowAvailableStacks()
     {
         List<string> columnNames = ["Name"];
-        TableVisualisationEngine<StackDto>.ViewAsTable(stacksDtos, ConsoleTableExt.TableAligntment.Left, columnNames);
+        TableVisualisationEngine<StackDto>.ViewAsTable(_stacksDtos, ConsoleTableExt.TableAligntment.Left, columnNames);
     }
 
     internal int ChooseStackMenu()
@@ -120,7 +124,7 @@ internal class StacksManager : ModelManager<Stack>
 
     private bool StackNameExist(string userEntry)
     {
-        foreach (StackDto stackDto in stacksDtos)
+        foreach (StackDto stackDto in _stacksDtos)
         {
             if (userEntry == stackDto.name)
                 return true;
@@ -130,7 +134,7 @@ internal class StacksManager : ModelManager<Stack>
 
     private int FetchModelId(string stackName)
     {
-        foreach (Stack stack in stacks)
+        foreach (Stack stack in _stacks)
         {
             if (stackName == stack.name)
                 return stack.id;
@@ -143,7 +147,7 @@ internal class StacksManager : ModelManager<Stack>
         AnsiConsole.MarkupLine("[red]Are you sure you want to delete the stack?\n[white](To Confirm Deletion Pres Enter)[/][/]");
         if (Console.ReadKey().Key == ConsoleKey.Enter)
         {
-            stacksDBController.DeleteRow(stackId);
+            _stacksDBController.DeleteRow(stackId);
             AnsiConsole.MarkupLine("[green]Stack Deleted Succesfully![/]");
             return;
         }
@@ -156,7 +160,7 @@ internal class StacksManager : ModelManager<Stack>
         modifiedStack.id = stackId;
         try
         {
-            stacksDBController.UpdateRow(modifiedStack);
+            _stacksDBController.UpdateRow(modifiedStack);
             AnsiConsole.MarkupLine("[green]Stack Updated Successfully![/]");
         }
         catch (SqlException ex)
@@ -165,30 +169,26 @@ internal class StacksManager : ModelManager<Stack>
                 throw;
             AnsiConsole.MarkupLine("[red]Unique constraint violated - A Stack with that name already exists![/]");
         }
-
-
     }
 
     protected override void AddNewModel()
     {
         var newStack = new Stack();
-
         var stackName = AnsiConsole.Ask<string>("[yellow]Enter the stack name: [/]");
         newStack.name = stackName;
 
         try
         {
-            stacksDBController.InsertRow(newStack);
+            _stacksDBController.InsertRow(newStack);
             AnsiConsole.MarkupLine("[green]Stack Added Successfully![/]\n (Press Any Key To Continue)");
             Console.ReadKey();
         }
-        catch (SqlException ex)
+        catch (Exception ex)
         {
             if (!ex.Message.Contains("Violation of UNIQUE KEY constraint"))
                 throw;
-            AnsiConsole.MarkupLine("[red]Unique constraint violated - Stack already exists![/]");
+            AnsiConsole.MarkupLine("[red]Unique constraint violated - Stack already exists![/]\n (Press Any Key To Continue)");
+            Console.ReadKey();
         }
-
     }
 }
-

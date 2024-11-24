@@ -1,5 +1,4 @@
-﻿
-namespace FlashCards.Dtos;
+﻿namespace FlashCards.Dtos;
 
 internal class CardDto
 {

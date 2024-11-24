@@ -1,5 +1,4 @@
-﻿
-namespace FlashCards.Models;
+﻿namespace FlashCards.Models;
 
 internal class StudySession
 {
@@ -8,4 +7,3 @@ internal class StudySession
     public  int  score { get; set; }
     public int session_id { get; set; }
 }
-

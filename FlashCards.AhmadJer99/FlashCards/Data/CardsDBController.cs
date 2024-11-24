@@ -9,6 +9,7 @@ internal class CardsDBController : DataBaseController<Card>
     {
         InitDataBase();
     }
+
     public override void DeleteRow(int _cardnumber)
     {
         using (var connection = CreateConnection())
@@ -25,7 +26,6 @@ internal class CardsDBController : DataBaseController<Card>
             var insertQuery = "INSERT INTO cards (FK_stack_id,front,back) VALUES (@FK_stack_id,@front,@back)";
             connection.Execute(insertQuery, newCard);
         }
-
     }
 
     public override List<Card> ReadAllRows()
@@ -55,6 +55,7 @@ internal class CardsDBController : DataBaseController<Card>
                 return cards;
             }
     }
+
     public int RowsCount(int _FK_stack_id)
     {
         using (var connection = CreateConnection())
@@ -74,4 +75,3 @@ internal class CardsDBController : DataBaseController<Card>
         }
     }
 }
-

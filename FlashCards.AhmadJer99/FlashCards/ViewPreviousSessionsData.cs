@@ -7,6 +7,7 @@ using FlashCards.Models;
 using System.Globalization;
 
 namespace FlashCards;
+
 public class ViewPreviousSessionsData
 {
     public enum ReportTypes
@@ -26,13 +27,14 @@ public class ViewPreviousSessionsData
         {
             case ReportTypes.ViewAllData:
                 ViewAllData();
+
                 AnsiConsole.MarkupLine("(Press Any Key To Continue)");
                 Console.ReadKey();
                 break;
             case ReportTypes.YearlyViewStackMonthlyData:
                 var userYearInput = ValidYearInput();
-
                 ViewYearlyStackData(userYearInput);
+
                 AnsiConsole.MarkupLine("(Press Any Key To Continue)");
                 Console.ReadKey();
                 break;
@@ -45,6 +47,7 @@ public class ViewPreviousSessionsData
         CultureInfo machineCulture = CultureInfo.InvariantCulture;
         string userYearInput;
         string yearFormat = "yyyy";
+
         do
         {
             userYearInput = AnsiConsole.Ask<string>("Enter a year to for the report in this format YYYY: ");
@@ -54,7 +57,6 @@ public class ViewPreviousSessionsData
                 continue;
             }
             AnsiConsole.MarkupLine("[red]Please make sure to enter the year in the correct format (YYYY)[/]");
-
         }
         while (!validYearEntry);
 
@@ -70,23 +72,21 @@ public class ViewPreviousSessionsData
             .ToList();
 
         List<string> columnNames = ["session_date", "score"];
-
         TableVisualisationEngine<StudySessionDto>.ViewAsTable(studySessionsDtos, ConsoleTableExt.TableAligntment.Left, columnNames);
-
     }
+
     internal static void ViewYearlyStackData(string year)
     {
         StacksManager stacksManager = new StacksManager();
         int stackId = stacksManager.ChooseStackMenu();
         if (stackId == -1)
             return;
+
         StudyDBController studyDBController = new();
         var yearlyReports = studyDBController.ReadYearlyStackData(stackId, year);
 
         Console.Clear();
         List<string> columnNames = ["Stack Name", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",];
-
         TableVisualisationEngine<YearlyReport>.ViewAsTable(yearlyReports, ConsoleTableExt.TableAligntment.Left, columnNames, $"Avg score per month for : {year}");
     }
-
 }

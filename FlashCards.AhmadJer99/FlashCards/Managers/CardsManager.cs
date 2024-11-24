@@ -14,45 +14,49 @@ internal class CardsManager : ModelManager<Card>
         AddCardToStack,
         SeeAmountOfCardsInStack,
         DeleteCard,
+        BackToMenu
     }
-    private int currentStackID;
+    private int _currentStackID;
 
-    private List<CardDto> cardsDtos;
-    private List<Card> cards;
-    readonly CardsDBController cardsDBController = new();
+    private List<CardDto>? _cardsDtos;
+    private List<Card>? _cards;
+    private readonly CardsDBController _cardsDBController = new();
+
     public CardsManager()
     {
         SelectStack();
-        LoadCardsWithStackId(currentStackID);
+        LoadCardsWithStackId(_currentStackID);
     }
+
     private void SelectStack()
     {
         List<StackDto> stacksDtos;
         List<Stack> stacks;
         StacksDBController stacksDBController = new();
-        StacksManager stacksManager = new StacksManager();
 
+        StacksManager stacksManager = new StacksManager();
         stacks = stacksDBController.ReadAllRows();
 
         stacksDtos = stacks.Select(
                 s => s.ToStackDto())
                 .ToList();
-
-        currentStackID = stacksManager.ChooseStackMenu();
-
+        _currentStackID = stacksManager.ChooseStackMenu();
     }
-    private void LoadCardsWithStackId(int currentStackID)
-    {
-        cards = cardsDBController.ReadAllRows(currentStackID);
 
-        cardsDtos = cards.Select(
+    private void LoadCardsWithStackId(int _currentStackID)
+    {
+        _cards = _cardsDBController.ReadAllRows(_currentStackID);
+
+        _cardsDtos = _cards.Select(
                 c => c.ToCardDto())
                 .ToList();
     }
+
     public void ShowMenu()
     {
-        if (currentStackID == -1)
+        if (_currentStackID == -1)
             return;
+
         var userOption = AnsiConsole.Prompt(
             new SelectionPrompt<CardOperation>()
             .Title("[yellow]Choose an operation: [/]")
@@ -69,8 +73,8 @@ internal class CardsManager : ModelManager<Card>
                 Console.ReadKey();
                 break;
             case CardOperation.SeeAmountOfCardsInStack:
-                var numOfCardsInStack = cardsDBController.RowsCount(currentStackID);
-                AnsiConsole.MarkupLine($"[yellow]This stack has {numOfCardsInStack} of cards in it[/]\n(Press Any Key To Continue)");
+                var numOfCardsInStack = _cardsDBController.RowsCount(_currentStackID);
+                AnsiConsole.MarkupLine($"[yellow]This stack has {numOfCardsInStack} of _cards in it[/]\n(Press Any Key To Continue)");
                 Console.ReadKey();
                 break;
             case CardOperation.DeleteCard:
@@ -80,13 +84,14 @@ internal class CardsManager : ModelManager<Card>
                 DeleteModel(cardNumber);
                 Console.ReadKey();
                 break;
+            case CardOperation.BackToMenu:
+                return;
         }
     }
 
     private void ShowCards()
     {
-        var cardsWithSequence = cardsDBController.ReadAllRows(currentStackID, true);
-
+        var cardsWithSequence = _cardsDBController.ReadAllRows(_currentStackID, true);
         var cardsWithSequenceDtos = cardsWithSequence.Select(
                 c => c.ToCardDto())
                 .ToList();
@@ -103,25 +108,26 @@ internal class CardsManager : ModelManager<Card>
             Console.Clear();
             ShowCards();
             AnsiConsole.MarkupLine("[yellow]Enter a card number (Or enter 'quit' to exit)[/]");
-            string? readResult = Console.ReadLine();
 
+            string? readResult = Console.ReadLine();
             if (string.IsNullOrEmpty(readResult))
             {
                 AnsiConsole.MarkupLine("[red]Error- Invalid input[/]");
                 continue;
             }
+
             string userEntry = readResult.Trim();
             exitMenu = userEntry.Equals("quit", StringComparison.CurrentCultureIgnoreCase);
             if (exitMenu)
                 continue;
 
-            if (!int.TryParse(userEntry, out int userChoice) || userChoice < 1 || userChoice > cardsDtos.Count)
+            if (!int.TryParse(userEntry, out int userChoice) || userChoice < 1 || userChoice > _cardsDtos.Count)
             {
                 AnsiConsole.MarkupLine("[red]Error- Invalid input, please choose a valid card number.[/]");
                 continue;
             }
 
-            var chosenCard = cards[userChoice - 1]; // User entry is 1-based; list index is 0-based
+            var chosenCard = _cards[userChoice - 1]; // User entry is 1-based; list index is 0-based
             AnsiConsole.MarkupLine($"[green]You selected card: {chosenCard.cardnumber}![/]");
             return chosenCard.cardnumber;
         }
@@ -129,16 +135,20 @@ internal class CardsManager : ModelManager<Card>
         return -1;
     }
 
-
-
-
     protected override void AddNewModel()
     {
         var frontText = AnsiConsole.Ask<string>("[yellow]Enter what you want to be on front of the card\n[/]");
         var backText = AnsiConsole.Ask<string>("[yellow]Enter what you want to be on back of the card\n[/]");
-        var card = new Card { FK_stack_id = currentStackID, front = frontText, back = backText };
-        cardsDBController.InsertRow(card);
-        AnsiConsole.MarkupLine("[green]Card Added Succesfully![/]");
+
+        var card = new Card 
+        { 
+            FK_stack_id = _currentStackID,
+            front = frontText,
+            back = backText
+        };
+        _cardsDBController.InsertRow(card);
+
+        AnsiConsole.MarkupLine("[green]Card Added Succesfully![/]\n(Press Any Key To Continue)");
     }
 
     protected override void DeleteModel(int cardNumber)
@@ -146,7 +156,7 @@ internal class CardsManager : ModelManager<Card>
         AnsiConsole.MarkupLine("[red]Are you sure you want to delete this card?\n[white](To Confirm Deletion Press Enter)[/][/]");
         if (Console.ReadKey().Key == ConsoleKey.Enter)
         {
-            cardsDBController.DeleteRow(cardNumber);
+            _cardsDBController.DeleteRow(cardNumber);
             AnsiConsole.MarkupLine("[green]Card Deleted Succesfully![/]");
             return;
         }

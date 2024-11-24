@@ -1,5 +1,4 @@
-﻿
-namespace FlashCards.Models;
+﻿namespace FlashCards.Models;
 
 internal class Card
 {
@@ -8,4 +7,3 @@ internal class Card
     public string front { get; set; }
     public string back { get; set; }
 }
-

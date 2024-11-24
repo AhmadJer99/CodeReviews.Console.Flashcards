@@ -9,6 +9,7 @@ internal class StacksDBController : DataBaseController<Stack>
     {
         InitDataBase();
     }
+
     public override void DeleteRow(int _id)
     {
         using (var connection = CreateConnection())
@@ -16,8 +17,6 @@ internal class StacksDBController : DataBaseController<Stack>
             var deleteQuery = "DELETE FROM stacks WHERE id = @id";
             connection.Execute(deleteQuery, new { id = _id });
         }
-
-        
     }
 
     public override void InsertRow(Stack stack)
@@ -27,7 +26,6 @@ internal class StacksDBController : DataBaseController<Stack>
             var insertQuery = "INSERT INTO stacks (name) VALUES (@name)";
             connection.Execute(insertQuery, new { stack.name });
         }
-
     }
 
     public override List<Stack> ReadAllRows()
@@ -47,8 +45,5 @@ internal class StacksDBController : DataBaseController<Stack>
             var updateQuery = "UPDATE stacks SET name = @name WHERE id = @id";
             connection.Execute(updateQuery, stack);
         }
-
     }
-
 }
-
