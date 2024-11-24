@@ -16,7 +16,7 @@ internal class CardsManager : ModelManager<Card>
         DeleteCard,
         BackToMenu
     }
-    private int _currentStackID;
+    private int _currentStackId;
 
     private List<CardDto>? _cardsDtos;
     private List<Card>? _cards;
@@ -25,7 +25,7 @@ internal class CardsManager : ModelManager<Card>
     public CardsManager()
     {
         SelectStack();
-        LoadCardsWithStackId(_currentStackID);
+        LoadCardsWithStackId(_currentStackId);
     }
 
     private void SelectStack()
@@ -40,12 +40,12 @@ internal class CardsManager : ModelManager<Card>
         stacksDtos = stacks.Select(
                 s => s.ToStackDto())
                 .ToList();
-        _currentStackID = stacksManager.ChooseStackMenu();
+        _currentStackId = stacksManager.ChooseStackMenu();
     }
 
-    private void LoadCardsWithStackId(int _currentStackID)
+    private void LoadCardsWithStackId(int _currentStackId)
     {
-        _cards = _cardsDBController.ReadAllRows(_currentStackID);
+        _cards = _cardsDBController.ReadAllRows(_currentStackId);
 
         _cardsDtos = _cards.Select(
                 c => c.ToCardDto())
@@ -54,7 +54,7 @@ internal class CardsManager : ModelManager<Card>
 
     public void ShowMenu()
     {
-        if (_currentStackID == -1)
+        if (_currentStackId == -1)
             return;
 
         var userOption = AnsiConsole.Prompt(
@@ -73,7 +73,7 @@ internal class CardsManager : ModelManager<Card>
                 Console.ReadKey();
                 break;
             case CardOperation.SeeAmountOfCardsInStack:
-                var numOfCardsInStack = _cardsDBController.RowsCount(_currentStackID);
+                var numOfCardsInStack = _cardsDBController.RowsCount(_currentStackId);
                 AnsiConsole.MarkupLine($"[yellow]This stack has {numOfCardsInStack} of _cards in it[/]\n(Press Any Key To Continue)");
                 Console.ReadKey();
                 break;
@@ -91,7 +91,7 @@ internal class CardsManager : ModelManager<Card>
 
     private void ShowCards()
     {
-        var cardsWithSequence = _cardsDBController.ReadAllRows(_currentStackID, true);
+        var cardsWithSequence = _cardsDBController.ReadAllRows(_currentStackId, true);
         var cardsWithSequenceDtos = cardsWithSequence.Select(
                 c => c.ToCardDto())
                 .ToList();
@@ -142,7 +142,7 @@ internal class CardsManager : ModelManager<Card>
 
         var card = new Card 
         { 
-            FK_stack_id = _currentStackID,
+            FK_stack_id = _currentStackId,
             front = frontText,
             back = backText
         };

@@ -135,8 +135,8 @@ internal abstract class DatabaseController<T>
     {
         return new SqlConnection(LoadConnectionString());
     }
-
     public abstract List<T> ReadAllRows();
+
     public abstract void InsertRow(T classObject);
     public abstract void DeleteRow(int _id);
     public abstract void UpdateRow(T classObject);
